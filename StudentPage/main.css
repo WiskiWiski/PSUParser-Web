@@ -1,95 +1,111 @@
-body{
+body {
     margin: 0;
     padding: 0;
     background-size: 100%;
 }
-select,option,form,input,body{
-	font-size: 16px;
-	font-family: "Helvetica Neue";
-	text-transform: uppercase;
-	color: #333;
+
+select, option, form, input, body {
+    font-size: 16px;
+    font-family: "Helvetica Neue";
+    text-transform: uppercase;
+    color: #333;
 }
 
-.main_container{
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
+.main_container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
     background: radial-gradient(#bdbdb2, #565450);
     background-size: cover;
 }
-.form{
-	padding-top: 5vh;
-	width: 30vw;
-	height: 80vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: stretch;
+
+.border_green {
+    padding: 2%;
+    border: 4px solid #3BFF29;
 }
-.color_container{
-	display: flex;
-	justify-content: space-around;
+
+.border_white {
+    padding: 2%;
+    border: 4px solid white;
 }
-option, select{
-	color: #333;
-	border: none;
-	cursor: pointer;
+
+.form {
+    padding-top: 5vh;
+    width: 30vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
 }
-select{
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 5px;
-	padding-bottom: 5px;
+
+.color_container {
+    display: flex;
+    justify-content: space-around;
 }
-.week_container{
-	display: flex; 
-	justify-content: space-around;
+
+option, select {
+    color: #333;
+    border: none;
+    cursor: pointer;
 }
-.week_button, .color_button{
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: 10px;
-	padding-right: 10px;
-	background-color: white;
-	cursor: pointer;
+
+select {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
-.file_sender_container:hover, 
-select:hover/*, .week_button:hover, .color_button:hover, .show_button:hover*/{
-	background-color: #f8f8f8;
+
+.week_container {
+    display: flex;
+    justify-content: space-around;
 }
-.show_button{
-	background-color: white;
-	border-width: 0px;
+
+.day_button, .color_button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.file_sender_container:hover,
+select:hover /*, .day_button:hover, .color_button:hover, .show_button:hover*/
+{
+    background-color: #f8f8f8;
+}
+
+.show_button {
+    background-color: white;
+    border-width: 0px;
     border-style: none;
     border-color: initial;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	cursor: pointer;
-	box-sizing: border-box;
-	text-align: center;
-}
-.active_button{
-	background-color: grey;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: 10px;
-	padding-right: 10px;
-	cursor: pointer;
-}
-.shedule{
-	height: 200px;
-	width: 30vw;
-	border: 1px solid black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    box-sizing: border-box;
+    text-align: center;
 }
 
+.active_button {
+    background-color: grey;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
 
-
-
-
-
-
+.schedule {
+    height: 200px;
+    width: 30vw;
+    overflow-y: scroll;
+    border: 1px solid black;
+}
 
 /*.form{
 	width: 75vw;

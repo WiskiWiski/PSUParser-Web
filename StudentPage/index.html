@@ -1,70 +1,83 @@
 <!doctype html>
-<html> 
-<head> 
-	<title>Student Page</title> 
-	<meta charset="utf-8"> 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="main.css"> 
-	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>	<!-- Это для автообновления страницы для моей программки. Уберем, когда будем запускать -->
-</head> 
+<html>
+<head>
+    <title>Student Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <!-- Это для автообновления страницы для моей программки. Уберем, когда будем запускать -->
+</head>
 
 <body>
 
 <div class="main_container">
-	<form class="form" enctype="multipart/form-data" method="post">
-		<div class="color_container">
-			<div class="color_button button">Белая</div>
-			<div class="color_button button">Зеленая</div>
-		</div>
-		<select class="fac_select" id="fac_selector" name="users">
-			<option disabled selected style='display:none;'>Факультет</option>
-			<option value="fit">fit</option>
-			<option value="gf">gf</option>
-			<option value="isf">isf</option>
-			<option value="mtf">mtf</option>
-			<option value="rtf">rtf</option>
-			<option value="fef">fef</option>
-			<option value="juf">juf</option>
-		</select>
-		<select class="course_select" id="course_selector" name="users">
-			<option disabled selected style='display:none;'>Курс</option>
-			<option value="1">I</option>
-			<option value="2">II</option>
-			<option value="3">III</option>
-			<option value="4">IV</option>
-			<option value="5">V</option>
-		</select>
-		<select class="group_select" id="group_select" name="users">
-			<option disabled selected style='display:none;'>Группа</option>
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-		</select>
-		<select class="subgroup_select" id="subgroup_select" name="users">
-			<option disabled selected style='display:none;'>Подгруппа</option>
-			<option value="1">A</option>
-			<option value="2">B</option>
-		</select>
-		<div class="week_container">
-			<div class="week_button button">ПН</div>
-			<div class="week_button button">ВТ</div>
-			<div class="week_button button">СР</div>
-			<div class="week_button button">ЧТ</div>
-			<div class="week_button button">ПТ</div>
-		</div>
-		<input type="submit" value="Показать расписание" class="show_button" onclick=""/>
-		<div class="shedule_container">
-			<div class="shedule"><!--  сюда будем вставлять нужные данные через innerHTML -->
-				
-			</div>
-		</div>
-	</form>
+    <div class="border border_white" id="color_border">
+        <form class="form" enctype="multipart/form-data">
+            <div class="color_container">
+                <div class="color_button button active_button" week_color="white">Белая</div>
+                <div class="color_button button green" week_color="green">Зеленая</div>
+            </div>
+            <select disabled class="fac_select" id="fac_selector" name="users">
+                <option disabled style='display:none;'>Факультет</option>
+                <option selected value="fit">fit</option>
+                <option value="gf">gf</option>
+                <option value="isf">isf</option>
+                <option value="mtf">mtf</option>
+                <option value="rtf">rtf</option>
+                <option value="fef">fef</option>
+                <option value="juf">juf</option>
+            </select>
+            <select class="course_select" id="course_selector" name="users">
+                <option disabled selected style='display:none;'>Not loaded</option>
+                <!--
+                <option value="1">I</option>
+                <option value="2">II</option>
+                <option value="3">III</option>
+                <option value="4">IV</option>
+                <option value="5">V</option>
+                -->
+            </select>
+            <select class="group_select" id="group_selector" name="users">
+                <option disabled selected style='display:none;'>Not loaded</option>
+                <!--
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                -->
+            </select>
+            <select class="subgroup_select" id="subgroup_selector" name="users">
+                <option disabled selected style='display:none;'>Not loaded</option>
+                <!--
+                <option value="1">A</option>
+                <option value="2">B</option>
+                -->
+            </select>
+            <div class="week_container">
+                <div class="day_button button active_button" day_index=1>ПН</div>
+                <div class="day_button button" day_index=2>ВТ</div>
+                <div class="day_button button" day_index=3>СР</div>
+                <div class="day_button button" day_index=4>ЧТ</div>
+                <div class="day_button button" day_index=5>ПТ</div>
+                <div class="day_button button" day_index=6>СБ</div>
+            </div>
+            <div class="schedule_container">
+                <div class="schedule" id="schedule_container">
+                    <!--  сюда будем вставлять нужные данные через innerHTML -->
+
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>
 
-<script type="text/javascript" src="js/studentScript.js" ></script>
+<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+<script src="./js/database.js"></script>
+
+<script type="text/javascript" src="js/studentScript.js"></script>
 
 </html>
