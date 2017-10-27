@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <meta charset="windows-1251"> -->
+</head>
+<body>
+
+<div align="center">
+    <div>
+		
+		Show table:
+		<input id="check_box" type="checkbox">
+
+        Факультет:
+        <select id="fac_selector" name="users" title="Факультет">
+            <option value="fit">ФИТ</option>
+            <option value="gf">ГФ</option>
+            <option value="isf">ИСФ</option>
+            <option value="mtf">МТФ</option>
+            <option value="rtf">РТФ</option>
+            <option value="fef">ФЭФ</option>
+            <option value="juf">ЮФ</option>
+        </select>
+
+        Курс:
+        <select id="course_selector" name="users" title="Факультет">
+            <option value="1">I</option>
+            <option value="2">II</option>
+            <option value="3">III</option>
+            <option value="4">IV</option>
+            <option value="5">V</option>
+        </select>
+
+        <input id="document" type="file"
+               accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" name="thumbnail"/>
+        <input type="submit" value="Отправить" onclick="sendFile();"/>
+
+    </div>
+    <hr/>
+
+
+    <br/>
+    <br/>
+
+    <div id="output" class="well"></div>
+
+
+</div>
+
+</body>
+
+
+<script type="text/javascript" src="./js/mammoth.browser.js"></script>
+<script type="text/javascript" src="./js/uploader.js"></script>
+
+</html>
+
