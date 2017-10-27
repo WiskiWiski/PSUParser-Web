@@ -1,6 +1,11 @@
 const WEEK_WHITE = 'white';
 const WEEK_GREEN = 'green';
 
+const COOKIE_COURSE = 'course';
+const COOKIE_GROUP = 'group';
+const COOKIE_SUBGROUP = 'subgroup';
+const COOKIE_WEEK_COLOR = 'week_color';
+
 var week = WEEK_WHITE;
 var fac = 'fit';
 var course;
@@ -10,6 +15,29 @@ var day = 1;
 
 const container = document.getElementById('schedule_container');
 var databaseJson;
+
+function setCookie(name, value) {
+    value = encodeURIComponent(value);
+    document.cookie = name + "=" + value;
+}
+
+// возвращает cookie с именем name, если есть, если нет, то undefined
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function deleteCookie(name) {
+    setCookie(name, "")
+}
+
+function clearSelector(select) {
+    while (select.options.length > 0) {
+        select.remove(0);
+    }
+}
 
 function fillCourseSelector() {
     function getCourses() {
@@ -26,11 +54,18 @@ function fillCourseSelector() {
     const courseList = getCourses();
 
     const courseSelector = document.getElementById('course_selector');
-    courseSelector.options = [];
+    clearSelector(courseSelector);
     courseList.forEach(function (course, number) {
-        courseSelector.options[number] = new Option(number + 1, number + 1);
+        courseSelector.options[number] = new Option((number + 1) + ' курс', number + 1);
     });
-    course = 1;
+
+    const cookieCourse = parseInt(getCookie(COOKIE_COURSE));
+    if (!isNaN(cookieCourse) && cookieCourse <= courseList.length) {
+        course = cookieCourse;
+        courseSelector.selectedIndex = course - 1; // course - 1 - т к индексация с 0
+    } else {
+        course = 1;
+    }
 }
 
 function fillGroupsSelector() {
@@ -46,13 +81,20 @@ function fillGroupsSelector() {
     }
 
     const groupList = getGroups();
-
     const groupSelector = document.getElementById('group_selector');
-    groupSelector.options = [];
+    clearSelector(groupSelector);
     groupList.forEach(function (groupName, number) {
         groupSelector.options[number] = new Option(groupName, groupName);
     });
-    group = groupList[0];
+
+    const cookieGroupIndex = parseInt(getCookie(COOKIE_GROUP));
+    if (!isNaN(cookieGroupIndex) && cookieGroupIndex <= groupList.length) {
+        group = groupList[cookieGroupIndex];
+        groupSelector.selectedIndex = cookieGroupIndex;
+    } else {
+        group = groupList[0];
+    }
+
 }
 
 function fillSubGroupsSelector() {
@@ -70,11 +112,19 @@ function fillSubGroupsSelector() {
     const subGroups = getSubGroups();
 
     const subGroupSelector = document.getElementById('subgroup_selector');
-    subGroupSelector.options = [];
+    clearSelector(subGroupSelector);
     subGroups.forEach(function (subGroupName, number) {
-        subGroupSelector.options[number] = new Option(number + 1, number + 1);
+        subGroupSelector.options[number] = new Option((number + 1) + ' подгруппа', number + 1);
     });
-    subGroup = 1;
+
+
+    const cookieSubGroup = parseInt(getCookie(COOKIE_SUBGROUP));
+    if (!isNaN(cookieSubGroup) && cookieSubGroup <= subGroups.length) {
+        subGroup = cookieSubGroup;
+        subGroupSelector.selectedIndex = cookieSubGroup - 1;
+    } else {
+        subGroup = 1;
+    }
 }
 
 function initButtonsListeners() {
@@ -124,9 +174,12 @@ function initButtonsListeners() {
 }
 
 function initCourseListener() {
-    const facSelector = document.getElementById('course_selector');
-    facSelector.addEventListener("change", function () {
+    const courseSelector = document.getElementById('course_selector');
+    courseSelector.addEventListener("change", function () {
         course = this.value;
+        deleteCookie(COOKIE_GROUP);
+        deleteCookie(COOKIE_SUBGROUP);
+        setCookie(COOKIE_COURSE, course);
         fillGroupsSelector();
         fillSubGroupsSelector();
         onPropertyChange();
@@ -134,18 +187,21 @@ function initCourseListener() {
 }
 
 function initGroupListener() {
-    const facSelector = document.getElementById('group_selector');
-    facSelector.addEventListener("change", function () {
+    const groupSelector = document.getElementById('group_selector');
+    groupSelector.addEventListener("change", function () {
         group = this.value;
+        setCookie(COOKIE_GROUP, this.selectedIndex);
+        deleteCookie(COOKIE_SUBGROUP);
         fillSubGroupsSelector();
         onPropertyChange();
     });
 }
 
 function initSubGroupListener() {
-    const facSelector = document.getElementById('subgroup_selector');
-    facSelector.addEventListener("change", function () {
+    const subGroupSelector = document.getElementById('subgroup_selector');
+    subGroupSelector.addEventListener("change", function () {
         subGroup = this.value;
+        setCookie(COOKIE_SUBGROUP, subGroup);
         onPropertyChange();
     });
 }

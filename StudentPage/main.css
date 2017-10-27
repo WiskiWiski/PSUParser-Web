@@ -6,9 +6,12 @@ body {
 
 select, option, form, input, body {
     font-size: 16px;
-    font-family: "Helvetica Neue";
-    text-transform: uppercase;
-    color: #333;
+    font-family: verdana, monospace;
+    color: dimgray;
+}
+
+.select {
+    color: dimgray;
 }
 
 .main_container {
@@ -17,13 +20,17 @@ select, option, form, input, body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background: radial-gradient(#bdbdb2, #565450);
+    background: radial-gradient(dimgray, #2a2a22);
     background-size: cover;
+}
+
+.border {
+    background: #bdbdb2;
 }
 
 .border_green {
     padding: 2%;
-    border: 4px solid #3BFF29;
+    border: 4px solid #3bdb21;
 }
 
 .border_white {
@@ -32,9 +39,8 @@ select, option, form, input, body {
 }
 
 .form {
-    padding-top: 5vh;
     width: 30vw;
-    height: 80vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -65,11 +71,13 @@ select {
 }
 
 .day_button, .color_button {
+    color: white;
     padding-top: 5px;
+    font-weight: bold;
+
     padding-bottom: 5px;
     padding-left: 10px;
     padding-right: 10px;
-    background-color: white;
     cursor: pointer;
 }
 
@@ -80,7 +88,6 @@ select:hover /*, .day_button:hover, .color_button:hover, .show_button:hover*/
 }
 
 .show_button {
-    background-color: white;
     border-width: 0px;
     border-style: none;
     border-color: initial;
@@ -92,7 +99,8 @@ select:hover /*, .day_button:hover, .color_button:hover, .show_button:hover*/
 }
 
 .active_button {
-    background-color: grey;
+    background-color: white;
+    color: dimgray;
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -101,7 +109,7 @@ select:hover /*, .day_button:hover, .color_button:hover, .show_button:hover*/
 }
 
 .schedule {
-    height: 200px;
+    height: 265px;
     width: 30vw;
     overflow-y: scroll;
     border: 1px solid black;
