@@ -5,7 +5,11 @@
     <meta charset="utf-8">
 
     <!-- для firebase hosting -->
-    <!-- <base href="https://psu-by.firebaseapp.com/StudentPage/"> -->
+    <script type="text/javascript">
+        if (document.location.host.indexOf('localhost') === -1){
+            document.write("<base href='https://psu-by.firebaseapp.com/StudentPage/' />");
+        }
+    </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="main.css" />
