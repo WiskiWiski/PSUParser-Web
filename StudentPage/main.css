@@ -1,188 +1,128 @@
-body {
+body{
     margin: 0;
     padding: 0;
     background-size: 100%;
-}
-
-select, option, form, input, body {
-    font-size: 16px;
     font-family: verdana, monospace;
     color: dimgray;
+    font-size: 16px;
 }
-
-.select {
-    color: dimgray;
-}
-
-.main_container {
+.main_container{
     height: 100vh;
+    background: url(images/back.jpg) no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form{
+    height: 600px;
+    width: 70vw;
+    background-color: #cbc6b4;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
-    background: radial-gradient(dimgray, #2a2a22);
-    background-size: cover;
 }
-
-.border {
-    background: #bdbdb2;
+.color_container{
+    display: flex;
+    margin-top: 75px;
 }
-
+.selects_container{
+    display: flex;
+    width: 50vw;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.week_container{
+    display: flex;
+    justify-content: space-between;
+    width: 35vw;
+}
 .border_green {
-    padding: 2%;
     border: 4px solid #3bdb21;
 }
-
 .border_white {
-    padding: 2%;
     border: 4px solid white;
 }
-
-.form {
-    width: 30vw;
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
-}
-
-.color_container {
-    display: flex;
-    justify-content: space-around;
-}
-
 option, select {
     color: #333;
     border: none;
     cursor: pointer;
 }
-
 select {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
+    width: 15vw;
 }
-
-.week_container {
-    display: flex;
-    justify-content: space-around;
-}
-
 .day_button, .color_button {
-    color: white;
     padding-top: 5px;
     font-weight: bold;
-
     padding-bottom: 5px;
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
 }
-
-.file_sender_container:hover,
-select:hover /*, .day_button:hover, .color_button:hover, .show_button:hover*/
-{
-    background-color: #f8f8f8;
-}
-
-.show_button {
-    border-width: 0px;
-    border-style: none;
-    border-color: initial;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    cursor: pointer;
-    box-sizing: border-box;
-    text-align: center;
-}
-
 .active_button {
     background-color: white;
-    color: dimgray;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    cursor: pointer;
+    border-radius: 2px;
 }
-
+.color_button{
+    margin-left: 25px;
+    margin-right: 25px;
+}
+select:hover{
+    background-color: #f7f7f7;
+}
+.line{
+    width: 3vw;
+    height: 2px;
+    background-color: #333;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
 .schedule {
-    height: 265px;
-    width: 30vw;
+    width: 50vw;
     overflow-y: scroll;
-    border: 1px solid black;
 }
 
-/*.form{
-	width: 75vw;
-	display: flex;
-	justify-content: space-between;
-}
-.file_sender_container{
-	background-color: white;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	cursor: pointer;
-	box-sizing: border-box;
-	width: 225px;
-	text-align: center;
-}
-.send_button{
-	background-color: white;
-	border-width: 0px;
-    border-style: none;
-    border-color: initial;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	cursor: pointer;
-	box-sizing: border-box;
-	width: 225px;
-	text-align: center;
-}
-.file_sender{
-	opacity: 0;
-	font-size: 0;
-	width: 0;
-	height: 0;
-}
-.file_sender_container:hover, 
-.send_button:hover, .form>select:hover{
-	background-color: #f8f8f8;
-}
-option, select{
-	color: #333;
-	border: none;
-	cursor: pointer;
-}
-select{
-	width: 225px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-select:hover, select:active, select:focus{
-	box-shadow: none;
+@media screen and (max-width: 750px){
+    .form{
+        height: 90vh;
+        width: 90vw;
+    }
 }
 
-#myProgress {
-    width: 75vw;
-    background-color: grey;
+@media screen and (max-width: 600px){
+    .color_container{
+        margin-top: 25px;
+    }
+    .color_button{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .selects_container{
+        width: 80vw;
+    }
+    select {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        width: 25vw;
+    }
+    .week_container{
+        width: initial;
+        font-size: 12px;
+    }
+    .line{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .schedule{
+        width: 80vw;
+        font-size: 14px;
+    }
 }
-#myBar {
-    width: 0%;
-    height: 30px;
-    background-color: #4CAF50;
-    text-align: center;
-    line-height: 30px;
-    color: white; 
-}
-.click{
-	color: white;
-	cursor: pointer;
-	border: 3px solid white;
-	border-radius: 2px;
-	padding: 10px;
-}*/

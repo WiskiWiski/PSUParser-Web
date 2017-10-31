@@ -141,7 +141,7 @@ function initButtonsListeners() {
                 // деактивация кнопок
                 const dayButtons = document.querySelectorAll('.day_button');
                 dayButtons.forEach(function (dayButton) {
-                    dayButton.classList.remove('active_button')
+                    dayButton.classList.remove('active_button');
                 });
 
             } else if (button.classList.contains('color_button')) {
@@ -213,6 +213,8 @@ function onPropertyChange() {
     Object.keys(scheduleJson).map(function (objectKey, index) {
         var lessonObj = scheduleJson[objectKey];
         str = str + '</br><strong>[' + (index + 1) + ']</strong>' + lessonObj['time']  + ': '+ lessonObj['lesson'];
+        var lesson = scheduleJson[objectKey]['lesson'];
+        str = str + '<span>[' + (index + 1) + ']</span></br>' + lesson;
     });
     container.innerHTML = str;
 }
