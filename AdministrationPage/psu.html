@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- <meta charset="windows-1251"> -->
+    <meta charset="utf-8">
+
+    <base href="https://psu-shara.ga/AdministrationPage/">
 </head>
 <body>
 
 <div align="center">
     <div>
-		
-		Show table:
-		<input id="check_box" type="checkbox">
 
-        Факультет:
-        <select id="fac_selector" name="users" title="Факультет">
-            <option value="fit">ФИТ</option>
-            <option value="gf">ГФ</option>
-            <option value="isf">ИСФ</option>
-            <option value="mtf">МТФ</option>
-            <option value="rtf">РТФ</option>
-            <option value="fef">ФЭФ</option>
-            <option value="juf">ЮФ</option>
+        РџРѕРєР°Р·Р°С‚СЊ С‚Р°Р±Р»РёС†Сѓ:
+        <input id="check_box" type="checkbox">
+
+        Р¤Р°РєСѓР»СЊС‚РµС‚:
+        <select id="fac_selector" name="users" title="Р¤Р°РєСѓР»СЊС‚РµС‚">
+            <option value="fit">Р¤РРў</option>
+            <option value="gf">Р“Р¤</option>
+            <option value="isf">РРЎР¤</option>
+            <option value="mtf">РњРўР¤</option>
+            <option value="rtf">Р РўР¤</option>
+            <option value="fef">Р¤Р­Р¤</option>
+            <option value="juf">Р®Р¤</option>
         </select>
 
-        Курс:
-        <select id="course_selector" name="users" title="Факультет">
+        РљСѓСЂСЃ:
+        <select id="course_selector" name="users" title="РљСѓСЂСЃ">
             <option value="1">I</option>
             <option value="2">II</option>
             <option value="3">III</option>
@@ -33,7 +35,7 @@
 
         <input id="document" type="file"
                accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" name="thumbnail"/>
-        <input type="submit" value="Отправить" onclick="sendFile();"/>
+        <input type="submit" value="Р—Р°РіСЂСѓР·РёС‚СЊ" onclick="sendFile();"/>
 
     </div>
     <hr/>

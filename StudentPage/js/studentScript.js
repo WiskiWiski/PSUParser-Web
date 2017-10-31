@@ -211,8 +211,8 @@ function onPropertyChange() {
     var str = '';
     const scheduleJson = databaseJson.val()[fac][course][week][group][subGroup][day];
     Object.keys(scheduleJson).map(function (objectKey, index) {
-        var lesson = scheduleJson[objectKey]['lesson'];
-        str = str + '</br><strong>[' + (index + 1) + ']</strong>' + lesson;
+        var lessonObj = scheduleJson[objectKey];
+        str = str + '</br><strong>[' + (index + 1) + ']</strong>' + lessonObj['time']  + ': '+ lessonObj['lesson'];
     });
     container.innerHTML = str;
 }
