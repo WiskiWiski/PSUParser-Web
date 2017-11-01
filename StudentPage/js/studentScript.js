@@ -208,15 +208,44 @@ function initSubGroupListener() {
 
 function onPropertyChange() {
     // обработчик изменений выбранных параметров
-    var str = '';
+    tableCreate();
+}
+
+function tableCreate() {
     const scheduleJson = databaseJson.val()[fac][course][week][group][subGroup][day];
-    Object.keys(scheduleJson).map(function (objectKey, index) {
-        var lessonObj = scheduleJson[objectKey];
-        str = str + '</br><strong>[' + (index + 1) + ']</strong>' + lessonObj['time']  + ': '+ lessonObj['lesson'];
-        var lesson = scheduleJson[objectKey]['lesson'];
-        str = str + '<span>[' + (index + 1) + ']</span></br>' + lesson;
-    });
-    container.innerHTML = str;
+
+    const lessonKeyList = Object.keys(scheduleJson);
+
+    var tbl = document.createElement('table');
+    tbl.style.width = '100%';
+    tbl.setAttribute('border', '1');
+    var tbdy = document.createElement('tbody');
+    for (var i = 0; i < lessonKeyList.length; i++) {
+        var lessonObj = scheduleJson[lessonKeyList[i]];
+        var tr = document.createElement('tr');
+        for (var j = 0; j < 3; j++) {
+            var cellText;
+            switch (j){
+                case 0:
+                    cellText = i+1;
+                    break;
+                case 1:
+                    cellText = lessonObj['time'];
+                    break;
+                case 2:
+                    cellText = lessonObj['cell_html'];
+                    break;
+            }
+            var td = document.createElement('td');
+            //td.appendChild(document.createTextNode(cellText));
+            td.innerHTML = cellText;
+            tr.appendChild(td)
+        }
+        tbdy.appendChild(tr);
+    }
+    tbl.appendChild(tbdy);
+    container.innerHTML = '';
+    container.appendChild(tbl);
 }
 
 
