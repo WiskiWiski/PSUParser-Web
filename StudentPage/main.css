@@ -6,15 +6,15 @@ body{
     font-size: 18px;
 }
 .main_container{
-    height: 100vh;
+	min-height: 100vh;
     background: url(images/back.jpg) no-repeat center center;
     background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 .form{
-    height: 600px;
+	margin-top: 15px;
+	margin-bottom: 15px;
     width: 70vw;
     background-color: #cbc6b4;
     border-radius: 20px;
@@ -24,14 +24,14 @@ body{
 }
 .color_container{
     display: flex;
-    margin-top: 75px;
+    margin-top: 15px;
 }
 .selects_container{
     display: flex;
     width: 50vw;
     justify-content: space-between;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 .week_container{
     display: flex;
@@ -67,6 +67,7 @@ select {
 .active_button {
     background-color: white;
     border-radius: 2px;
+    /*лулуыы*/
 }
 .color_button{
     margin-left: 25px;
@@ -79,20 +80,18 @@ select:hover{
     width: 3vw;
     height: 2px;
     background-color: #333;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 .schedule {
     width: 50vw;
-    max-height: 14em;
-    overflow: auto;
+    margin-bottom: 15px;
 }
 
 @media screen and (max-width: 750px){
-    .form{
-        height: 90vh;
-        width: 90vw;
-    }
+	.form{
+		width: 90vw;
+	}
 }
 
 @media screen and (max-width: 600px){
@@ -124,7 +123,5 @@ select:hover{
     .schedule{
         width: 80vw;
         font-size: 14px;
-        max-height: 20em;
-        overflow: auto;
     }
 }
