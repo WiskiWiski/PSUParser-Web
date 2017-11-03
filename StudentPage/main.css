@@ -96,7 +96,7 @@ select:hover{
 
 @media screen and (max-width: 600px){
     .color_container{
-        margin-top: 25px;
+        margin-top: 10px;
     }
     .color_button{
         margin-left: 10px;
@@ -104,6 +104,8 @@ select:hover{
     }
     .selects_container{
         width: 80vw;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
     select {
         padding-left: 5px;
@@ -117,11 +119,11 @@ select:hover{
         font-size: 12px;
     }
     .line{
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: 7px;
+        margin-bottom: 7px;
     }
     .schedule{
-        width: 80vw;
+        width: 85vw;
         font-size: 14px;
     }
 }
