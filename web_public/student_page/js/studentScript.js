@@ -225,9 +225,9 @@ function tableCreate() {
         var tr = document.createElement('tr');
         for (var j = 0; j < 3; j++) {
             var cellText;
-            switch (j){
+            switch (j) {
                 case 0:
-                    cellText = i+1;
+                    cellText = i + 1;
                     break;
                 case 1:
                     cellText = lessonObj['time'];

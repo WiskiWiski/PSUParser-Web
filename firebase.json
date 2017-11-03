@@ -1,0 +1,23 @@
+{
+  "hosting": {
+    "public":"web_public/",
+    "ignore": [
+		"firebase.json",
+      "**/.git/**",
+      "**/.idea/**",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+		
+		{
+        "source": "/upload",
+        "destination": "/admin_page/psu.html"
+      },
+		{
+        "source": "**",
+        "destination": "/student_page/index.html"
+      }
+		
+    ]
+  }
+}
