@@ -233,7 +233,8 @@ function tableCreate() {
                     cellText = lessonObj['time'];
                     break;
                 case 2:
-                    cellText = lessonObj['cell_html'];
+                    //cellText = lessonObj['cell_html'];
+                    cellText = lessonObj['lesson'];
                     break;
             }
             var td = document.createElement('td');
