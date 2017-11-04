@@ -1,0 +1,25 @@
+body {
+    margin: 4%;
+    padding: 2%;
+    border: solid #DCDCDC;
+}
+
+.pref {
+    padding: 5px 10px;
+    width: 18vw;
+}
+
+.button {
+    width: 100%;
+    padding: 5px 10px;
+    height: 100%;
+}
+
+#msg_list {
+    width: 30vw
+}
+
+#msg_container {
+    width: 50vw;
+    padding: 5vw;
+}

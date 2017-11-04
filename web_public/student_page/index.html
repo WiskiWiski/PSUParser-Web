@@ -7,7 +7,12 @@
 
     <!-- for firebase hosting -->
     <script type="text/javascript">
-        if (document.location.host.indexOf('localhost') === -1) {
+        const hosting = document.location;
+        if (hosting.host.includes("localhost") || hosting.origin.includes("file")) {
+            // localhost
+
+        } else {
+            // firebase hosting
             document.write("<base href='https://psu-by.firebaseapp.com/student_page/' />");
         }
     </script>

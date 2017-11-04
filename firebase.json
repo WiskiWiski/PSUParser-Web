@@ -11,7 +11,7 @@
 		
 		{
         "source": "/upload",
-        "destination": "/admin_page/psu.html"
+        "destination": "/admin_page/index.html"
       },
 		{
         "source": "**",

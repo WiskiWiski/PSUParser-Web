@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+
+    <!-- for firebase hosting -->
+    <script type="text/javascript">
+        const hosting = document.location;
+        if (hosting.host.includes("localhost") || hosting.origin.includes("file")) {
+            // localhost
+
+        } else {
+            // firebase hosting
+            document.write("<base href='https://psu-by.firebaseapp.com/admin_page/' />");
+        }
+    </script>
+
+
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <script type="text/javascript" src="./js/mammoth.browser.js"></script>
+
+</head>
+<body>
+
+
+<table align="center" width="100vw" id="input_table">
+    <tr>
+        <td colspan="3">
+            <input style="padding-left: 3vw" class="button pref" id="document" type="file"
+                   accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" name="thumbnail"/>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <select class="selector pref" id="fac_selector" title="Факультет" disabled>
+                <option disabled selected style='display:none;'>Факультет</option>
+                <option value="fit">ФИТ</option>
+                <option value="gf">ГФ</option>
+                <option value="isf">ИСФ</option>
+                <option value="mtf">МТФ</option>
+                <option value="rtf">РТФ</option>
+                <option value="fef">ФЭФ</option>
+                <option value="juf">ЮФ</option>
+            </select>
+        </td>
+
+        <td>
+            <select class="selector pref" id="course_selector" name="users" title="Курс" disabled>
+                <option disabled selected style='display:none;'>Курс</option>
+                <option value="1">I</option>
+                <option value="2">II</option>
+                <option value="3">III</option>
+                <option value="4">IV</option>
+                <option value="5">V</option>
+            </select>
+        </td>
+
+        <td>
+            <input id="subgroup_numb" title="Максимально количесвтво подгрупп для группы" class="subgroups pref"
+                   type="number" disabled
+                   placeholder="Макс. кол-во подгрупп" height="48" size="18vw">
+        </td>
+
+    </tr>
+
+    <tr>
+        <td colspan="3" style="height: 3vw;">
+            <input class="button" type="submit" value="Загрузить" onclick="sendFile();"/>
+
+        </td>
+    </tr>
+</table>
+
+<div style="display: none" id="result_container">
+
+    <div style="height: 2px; background: #DCDCDC; margin-bottom: 1vw;margin-top: 1vw;"></div>
+
+    <h3 align="center">Complete!</h3>
+
+    <div id="result_content">
+
+        <table id="result_table" width="100vw">
+            <tr>
+                <td>
+                    <select size="10" id="msg_list"></select>
+                </td>
+                <td>
+                    <div id="msg_container"></div>
+                </td>
+
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="./js/uploader.js"></script>
+
+</body>
+</html>
