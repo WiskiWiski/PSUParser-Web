@@ -105,6 +105,7 @@ function enablePrefs() {
     for (var i = 0; i < prefs.length; i++) {
         prefs [i].removeAttribute('disabled');
     }
+    document.getElementById('upload_btn').removeAttribute('disabled');
 }
 
 function processResult(res) {

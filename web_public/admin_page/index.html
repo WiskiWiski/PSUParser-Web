@@ -50,11 +50,11 @@
         <td>
             <select class="selector pref" id="course_selector" name="users" title="Курс" disabled>
                 <option disabled selected style='display:none;'>Курс</option>
-                <option value="1">I</option>
-                <option value="2">II</option>
-                <option value="3">III</option>
-                <option value="4">IV</option>
-                <option value="5">V</option>
+                <option value="1">I Курс</option>
+                <option value="2">II Курс</option>
+                <option value="3">III Курс</option>
+                <option value="4">IV Курс</option>
+                <option value="5">V Курс</option>
             </select>
         </td>
 
@@ -68,7 +68,7 @@
 
     <tr>
         <td colspan="3" style="height: 3vw;">
-            <input class="button" type="submit" value="Загрузить" onclick="sendFile();"/>
+            <input class="button" id="upload_btn" type="submit" value="Загрузить" onclick="sendFile();" disabled/>
 
         </td>
     </tr>
@@ -78,7 +78,7 @@
 
     <div style="height: 2px; background: #DCDCDC; margin-bottom: 1vw;margin-top: 1vw;"></div>
 
-    <h3 align="center">Complete!</h3>
+    <h3 align="center">Выполнено!</h3>
 
     <div id="result_content">
 
