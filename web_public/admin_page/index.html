@@ -24,7 +24,7 @@
 <body>
 
 
-<table align="center" width="100vw" id="input_table">
+<table align="center" id="input_table">
     <tr>
         <td colspan="3">
             <input style="padding-left: 3vw" class="button pref" id="document" type="file"
@@ -78,19 +78,16 @@
 
     <div style="height: 2px; background: #DCDCDC; margin-bottom: 1vw;margin-top: 1vw;"></div>
 
-    <h3 align="center">Выполнено!</h3>
+    <h3 id="complete_text" align="center">Выполнено!</h3>
 
     <div id="result_content">
 
-        <table id="result_table" width="100vw">
+        <table id="result_table">
             <tr>
                 <td>
                     <select size="10" id="msg_list"></select>
                 </td>
-                <td>
-                    <div id="msg_container"></div>
-                </td>
-
+                <td id="msg_container"></td>
             </tr>
         </table>
 

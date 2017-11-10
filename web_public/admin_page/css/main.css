@@ -20,6 +20,16 @@ body {
 }
 
 #msg_container {
-    width: 50vw;
+    width: 100%;
     padding: 5vw;
+}
+
+.option_warning {
+    background: rgba(209, 195, 3, 0.4);
+    color: #1F1F1F;
+}
+
+.option_error {
+    background: rgba(255, 69, 0, 0.4);
+    color: #1f1f1f;
 }

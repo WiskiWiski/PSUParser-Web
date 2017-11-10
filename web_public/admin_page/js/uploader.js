@@ -16,6 +16,7 @@ var sgpg = 0;
 const resultContainer = document.getElementById("result_container");
 const msgList = document.getElementById("msg_list");
 const msgContainer = document.getElementById("msg_container");
+const uploadButton = document.getElementById('upload_btn');
 
 
 document.getElementById("document").addEventListener("change", handleFileSelect, false);
@@ -23,6 +24,7 @@ document.getElementById("document").addEventListener("change", handleFileSelect,
 var file;
 
 function sendFile() {
+    uploadButton.setAttribute('disabled', 'true');
     readFileInputEventAsArrayBuffer(file, post);
 
     resultContainer.setAttribute("style", "display: none");
@@ -105,11 +107,13 @@ function enablePrefs() {
     for (var i = 0; i < prefs.length; i++) {
         prefs [i].removeAttribute('disabled');
     }
-    document.getElementById('upload_btn').removeAttribute('disabled');
+    uploadButton.removeAttribute('disabled');
 }
 
 function processResult(res) {
     resultContainer.setAttribute("style", "display: block");
+
+    var completeText = 'Успешно загружено!';
 
     const jsonRes = JSON.parse(res);
     if (jsonRes.length <= 0) {
@@ -120,26 +124,60 @@ function processResult(res) {
         */
     } else {
         clearSelector(msgList);
+        completeText = 'Успешно загружено: найдено ' + jsonRes.length + ' предупреждений!';
 
-        jsonRes.forEach(function (msg, k) {
-            msgList.options[k] = new Option(msg.displayText, k);
+        jsonRes.forEach(function (log, k) {
+            msgList.options[k] = new Option(log.displayText, k);
+            msgList.options[k].classList.add(getLogClassStyle(log));
+
+            if (Math.floor(log.code / 1000) === 3) {
+                completeText = 'Загрузка прервана: обнаружены критические ошибки!';
+            }
         });
 
         msgList.addEventListener('change', function (ev) {
             const json = jsonRes[ev.target.value];
-            var html = json.displayText;
-            msgContainer.innerHTML = html;
+            onChange(json);
         });
 
         msgList.value = 0;
-        msgContainer.innerHTML = jsonRes[0].displayText;
+        onChange(jsonRes[0]);
         msgList.focus();
+
+        function onChange(log) {
+            var text = '';
+
+            for (var key in log.when) {
+                if (log.when.hasOwnProperty(key)) {
+                    text = text + log.when[key] + ' ';
+                }
+            }
+
+            msgContainer.innerHTML = text + '</br>' + log.displayText;
+            msgContainer.setAttribute('class', getLogClassStyle(log));
+        }
+    }
+
+    document.getElementById('complete_text').innerHTML = completeText;
+
+    function getLogClassStyle(log) {
+        switch (Math.floor(log.code / 1000)) {
+            case 1:
+                return 'option_msg';
+            case 2:
+                return 'option_warning';
+            case 3:
+                return 'option_error';
+            default:
+                return 'option';
+        }
     }
 }
 
 function post(result) {
     var xhr = new XMLHttpRequest();
     xhr.onload = xhr.onerror = function () {
+        uploadButton.removeAttribute('disabled');
         if (xhr.status === 200) {
             //alert(xhr.responseText);
             processResult(xhr.responseText);
