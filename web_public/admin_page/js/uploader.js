@@ -127,7 +127,7 @@ function processResult(res) {
         completeText = 'Успешно загружено: найдено ' + jsonRes.length + ' предупреждений!';
 
         jsonRes.forEach(function (log, k) {
-            msgList.options[k] = new Option(log.displayText, k);
+            msgList.options[k] = new Option('[' + log.code + '] ' + log.displayText, k);
             msgList.options[k].classList.add(getLogClassStyle(log));
 
             if (Math.floor(log.code / 1000) === 3) {
@@ -145,15 +145,15 @@ function processResult(res) {
         msgList.focus();
 
         function onChange(log) {
-            var text = '';
+            var text = '[' + log.code + '] ';
 
             for (var key in log.when) {
                 if (log.when.hasOwnProperty(key)) {
-                    text = text + log.when[key] + ' ';
+                    text = text + key + ': ' + log.when[key] + ' ';
                 }
             }
 
-            msgContainer.innerHTML = text + '</br>' + log.displayText;
+            msgContainer.innerHTML = text + ' - \"<i>' + log.payload + '</i>\"</br><strong>' + log.displayText + '</strong>';
             msgContainer.setAttribute('class', getLogClassStyle(log));
         }
     }
@@ -163,7 +163,7 @@ function processResult(res) {
     function getLogClassStyle(log) {
         switch (Math.floor(log.code / 1000)) {
             case 1:
-                return 'option_msg';
+                return 'option_info';
             case 2:
                 return 'option_warning';
             case 3:
