@@ -33,24 +33,24 @@ function sendFile() {
 }
 
 function parseFileName(filename) {
-    const facRegExp = /[A-z]+(?=\s*-\s*\d)/gm;
-    var facArr = filename.match(facRegExp);
-    if (facArr !== null) {
-        var localFac = facArr[0];
-        if (localFac !== undefined && localFac.length >= 2 && localFac.length <= 3) {
-            fac = localFac.toLowerCase().trim();
-            selectFacByValue(fac);
-            subgroupsNumbByValue(fac);
-        }
-    }
+    const REG_EXP_FAC_COURSE = /[A-z]{2,4}\s*(-|–)\s*[1-6]/gi;
+    const facCourseList = getByRegExp(filename, REG_EXP_FAC_COURSE);
+    console.log('facCourseList: ' + facCourseList);
+    if (facCourseList.length === 1) {
+        const facCourse = facCourseList[0];
 
-    const courseRegExp = /\d(?=\s*\.\s*)/gm;
-    const courseArr = filename.match(courseRegExp);
-    if (courseArr !== null) {
-        var localCourse = courseArr[0];
-        if (localCourse > 0 && localCourse <= 5) {
+        const courseStr = facCourse.charAt(facCourse.length - 1);
+        const localCourse = parseInt(courseStr);
+        if (!isNaN(course)) {
             course = localCourse;
             selectCourseByValue(course);
+        }
+
+        const localFac = facCourse.replace(/[^A-z]+/gi, '');
+        if (localFac !== undefined && localFac.trim() !== '') {
+            fac = localFac.toLowerCase().trim();
+            selectFacByValue(fac);
+            subgroupsNumbByFac(fac);
         }
     }
 
@@ -78,7 +78,7 @@ function parseFileName(filename) {
         }
     }
 
-    function subgroupsNumbByValue(facValue) {
+    function subgroupsNumbByFac(facValue) {
         switch (facValue) {
             case 'fit':
                 sgpg = 2;
@@ -86,6 +86,15 @@ function parseFileName(filename) {
                 sgpg = 2;
         }
         subgroupsElement.value = sgpg;
+    }
+
+    function getByRegExp(source, exp) {
+        const res = source.match(exp);
+        if (res === null) {
+            return [];
+        } else {
+            return res;
+        }
     }
 }
 
