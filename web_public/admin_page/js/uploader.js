@@ -1,27 +1,57 @@
+const resultContainer = document.getElementById("result_container");
+
 /**
  * Created by WiskiW on 08.10.2017.
  */
 
+const msgList = document.getElementById("msg_list");
+const msgContainer = document.getElementById("msg_container");
+const uploadButton = document.getElementById('upload_btn');
 
+const facSelectorElement = document.getElementById("fac_selector");
+const courseSelectorElement = document.getElementById("course_selector");
+const subgroupsSelectorElement = document.getElementById("subgroup_numb");
 
-var facElement = document.getElementById("fac_selector");
-var courseElement = document.getElementById("course_selector");
-var subgroupsElement = document.getElementById("subgroup_numb");
+const FAC_LIST = {
+    fit: 'ФИТ',
+    gf: 'ГФ'
+    /*,
+    isf: 'ИСФ',
+    mtf: 'МТФ',
+    rtf: 'РТФ',
+    fef: 'ФЭФ',
+    juf: 'ЮФ'
+    */
+};
 
+const FILENAME_PREFIX_LIST = {
+    fit: ['fit'],
+    gf: ['rgf', 'aja', 'rja', 'iff']
+};
+
+var file;
 
 var fac = 'unset';
 var course = 0;
 var sgpg = 0;
 
-const resultContainer = document.getElementById("result_container");
-const msgList = document.getElementById("msg_list");
-const msgContainer = document.getElementById("msg_container");
-const uploadButton = document.getElementById('upload_btn');
-
 
 document.getElementById("document").addEventListener("change", handleFileSelect, false);
+predraw();
 
-var file;
+function predraw() {
+    // Заполнение FAC селектора
+    var number = 0;
+    const facObj = new Option('Факультет', 'fac');
+    facObj.setAttribute("style", "display:none");
+    facSelectorElement.options[number] = facObj;
+    number++;
+    for (var facV in FAC_LIST) {
+        var vacN = FAC_LIST[facV];
+        facSelectorElement.options[number] = new Option(vacN, facV);
+        number++;
+    }
+}
 
 function sendFile() {
     uploadButton.setAttribute('disabled', 'true');
@@ -33,9 +63,8 @@ function sendFile() {
 }
 
 function parseFileName(filename) {
-    const REG_EXP_FAC_COURSE = /[A-z]{2,4}\s*(-|–)\s*[1-6]/gi;
+    const REG_EXP_FAC_COURSE = /[A-z-–]{2,}\s*[-–]\s*[1-6]/gi;
     const facCourseList = getByRegExp(filename, REG_EXP_FAC_COURSE);
-    console.log('facCourseList: ' + facCourseList);
     if (facCourseList.length === 1) {
         const facCourse = facCourseList[0];
 
@@ -44,48 +73,82 @@ function parseFileName(filename) {
         if (!isNaN(course)) {
             course = localCourse;
             selectCourseByValue(course);
+        } else {
+            courseSelectorElement.value = 'course';
         }
 
-        const localFac = facCourse.replace(/[^A-z]+/gi, '');
-        if (localFac !== undefined && localFac.trim() !== '') {
-            fac = localFac.toLowerCase().trim();
-            selectFacByValue(fac);
-            subgroupsNumbByFac(fac);
+        var filenamePrefix = facCourse.replace(/[-–]\s*[0-6]/gi, '');
+        console.log('Filename prefix: ' + filenamePrefix);
+
+        if (filenamePrefix !== undefined && filenamePrefix.trim() !== '') {
+            filenamePrefix = filenamePrefix.toLowerCase().trim();
+            selectFacByFileNamePrefix(filenamePrefix);
+            subgroupsNumbByFileName(filenamePrefix, course);
+        } else {
+            facSelectorElement.value = 'fac'
         }
     }
 
-    function selectFacByValue(facValue) {
-        var facSelector = document.getElementById("fac_selector");
-        const list = facSelector.options;
-        for (var k = 0; k < list.length; k++) {
-            if (list[k].value === facValue) {
-                console.log('Select fac by filename: %s', list[k].text);
-                facSelector.value = list[k].value;
-                break;
+    function selectFacByFileNamePrefix(filenamePrefix) {
+        var lFac;
+        var foundFacInList = '';
+
+        // перебор по объекту с названиями файлов для факультетов
+        for (lFac in FILENAME_PREFIX_LIST) {
+            FILENAME_PREFIX_LIST[lFac].forEach(function (filename) {
+                if (foundFacInList === '' && filenamePrefix === filename) {
+                    fac = foundFacInList = lFac;
+                }
+            });
+        }
+
+        const list = facSelectorElement.options;
+        if (foundFacInList === '') {
+            facSelectorElement.value = list[0].value;
+        } else {
+            var i = 1; // т к первый элемент - Факультет
+            // поиск нужного индекса для FacSelector
+            for (lFac in FAC_LIST) {
+                if (lFac === foundFacInList) {
+                    console.log('Select fac by filename: %s', list[i].text);
+                    facSelectorElement.value = list[i].value;
+                    return;
+                }
+                i++;
             }
         }
     }
 
     function selectCourseByValue(courseValue) {
-        var courseSelector = document.getElementById("course_selector");
-        const list = courseSelector.options;
+        const list = courseSelectorElement.options;
         for (var k = 0; k < list.length; k++) {
-            if (list[k].value === '' + courseValue) {
+            if (list[k].value == courseValue) {
                 console.log('Select course by filename: %d', k);
-                courseSelector.value = k;
-                break;
+                courseSelectorElement.value = k;
+                return;
             }
         }
+        courseSelectorElement.value = 'course';
     }
 
-    function subgroupsNumbByFac(facValue) {
-        switch (facValue) {
-            case 'fit':
-                sgpg = 2;
-            default:
-                sgpg = 2;
+    function subgroupsNumbByFileName(filenamePrefix, course) {
+        for (var f in FILENAME_PREFIX_LIST) {
+            if (FILENAME_PREFIX_LIST[f].includes(filenamePrefix)) {
+                switch (f) {
+                    case 'fit':
+                    case'gf':
+                        setSGPG(2);
+                        return;
+                }
+            }
         }
-        subgroupsElement.value = sgpg;
+
+        setSGPG(2);
+
+        function setSGPG(v) {
+            sgpg = v;
+            subgroupsSelectorElement.value = v;
+        }
     }
 
     function getByRegExp(source, exp) {
@@ -101,7 +164,9 @@ function parseFileName(filename) {
 
 function handleFileSelect(event) {
     file = event.target.files[0];
-    parseFileName(event.target.files[0].name);
+    if (file !== undefined) {
+        parseFileName(file.name);
+    }
     enablePrefs();
 }
 
@@ -209,9 +274,9 @@ function post(result) {
     xhr.setRequestHeader('Content-Type', 'application/json');
 
 
-    var fac = facElement.options[facElement.selectedIndex].value;
-    var course = courseElement.options[courseElement.selectedIndex].value;
-    var sgpg = parseInt(subgroupsElement.value.trim());
+    var fac = facSelectorElement.options[facSelectorElement.selectedIndex].value;
+    var course = courseSelectorElement.options[courseSelectorElement.selectedIndex].value;
+    var sgpg = parseInt(subgroupsSelectorElement.value.trim());
     if (sgpg <= 0) {
         sgpg = 2;
     }
