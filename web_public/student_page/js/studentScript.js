@@ -1,27 +1,33 @@
 const WEEK_WHITE = 'white';
 const WEEK_GREEN = 'green';
 
+const COOKIE_FAC = 'fuck';
 const COOKIE_COURSE = 'course';
 const COOKIE_GROUP = 'group';
 const COOKIE_SUBGROUP = 'subgroup';
-const COOKIE_WEEK_COLOR = 'week_color';
 
-var week = WEEK_WHITE;
-var fac = 'fit';
-var course;
-var group;
-var subGroup;
-var day = 1;
+let week = WEEK_WHITE;
+let fac = 'fit';
+let course;
+let group;
+let subGroup;
+let day = 1;
+
+const borderElement = document.getElementById('color_border');
+
+const facSelector = document.getElementById('fac_selector');
+const courseSelector = document.getElementById('course_selector');
+const groupSelector = document.getElementById('group_selector');
+const subGroupSelector = document.getElementById('subgroup_selector');
 
 const container = document.getElementById('schedule_container');
-var databaseJson;
+let databaseJson;
 
 function setCookie(name, value) {
     value = encodeURIComponent(value);
     document.cookie = name + "=" + value;
 }
 
-// возвращает cookie с именем name, если есть, если нет, то undefined
 function getCookie(name) {
     var matches = document.cookie.match(new RegExp(
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -39,92 +45,95 @@ function clearSelector(select) {
     }
 }
 
+function selectOption(selectorElement, dataList, cookieTag, optionName) {
+    let selectValue = undefined;
+    if (dataList.length > 0) {
+        clearSelector(selectorElement);
+        dataList.forEach(function (keyStr, number) {
+            selectorElement.options[number] = new Option(optionName(keyStr, number), keyStr);
+        });
+        const previewCookieValue = getCookie(cookieTag);
+        if (previewCookieValue === undefined || selectOptionByValue(previewCookieValue) === -1) {
+            selectValue = dataList[0];
+        } else {
+            selectValue = previewCookieValue;
+        }
+        setCookie(cookieTag, selectValue);
+    } else {
+        alert('ERROR: ' + cookieTag.toUpperCase() + ' list is empty!');
+        throw 'Not enough data: ' + cookieTag;
+    }
+    return selectValue;
+
+    function selectOptionByValue(value1) {
+        const opts = selectorElement.options;
+        for (let k = 0; k < opts.length; k++) {
+            const opt = opts[k];
+            if (opt.value === value1) {
+                selectorElement.selectedIndex = k;
+                return k;
+            }
+        }
+        return -1;
+    }
+}
+
+function fillFacSelector() {
+    function getFacs() {
+        const facList = [];
+        const data = databaseJson.val();
+        Object.keys(data).map(function (objectKey, index) {
+            facList[index] = objectKey;
+        });
+        return facList;
+    }
+
+    const facList = getFacs();
+    fac = selectOption(facSelector, facList, COOKIE_FAC,
+        (keyStr, n) => keyStr.toUpperCase());
+}
+
 function fillCourseSelector() {
     function getCourses() {
         const courseList = [];
-        var data = databaseJson.val()[fac];
-
+        const data = databaseJson.val()[fac];
         Object.keys(data).map(function (objectKey, index) {
-            //var value = object[objectKey];
             courseList[index] = objectKey;
         });
         return courseList;
     }
 
     const courseList = getCourses();
-
-    const courseSelector = document.getElementById('course_selector');
-    clearSelector(courseSelector);
-    courseList.forEach(function (course, number) {
-        courseSelector.options[number] = new Option((number + 1) + ' курс', number + 1);
-    });
-
-    const cookieCourse = parseInt(getCookie(COOKIE_COURSE));
-    if (!isNaN(cookieCourse) && cookieCourse <= courseList.length) {
-        course = cookieCourse;
-        courseSelector.selectedIndex = course - 1; // course - 1 - т к индексация с 0
-    } else {
-        course = 1;
-    }
+    course = selectOption(courseSelector, courseList, COOKIE_COURSE, (keyStr, n) => keyStr + ' курс');
 }
 
 function fillGroupsSelector() {
     function getGroups() {
         const groupList = [];
-        var data = databaseJson.val()[fac][course][week];
-
+        const data = databaseJson.val()[fac][course][week];
         Object.keys(data).map(function (objectKey, index) {
-            //var value = object[objectKey];
             groupList[index] = objectKey;
         });
         return groupList;
     }
 
     const groupList = getGroups();
-    const groupSelector = document.getElementById('group_selector');
-    clearSelector(groupSelector);
-    groupList.forEach(function (groupName, number) {
-        groupSelector.options[number] = new Option(groupName, groupName);
-    });
-
-    const cookieGroupIndex = parseInt(getCookie(COOKIE_GROUP));
-    if (!isNaN(cookieGroupIndex) && cookieGroupIndex <= groupList.length) {
-        group = groupList[cookieGroupIndex];
-        groupSelector.selectedIndex = cookieGroupIndex;
-    } else {
-        group = groupList[0];
-    }
-
+    group = selectOption(groupSelector, groupList, COOKIE_GROUP, (keyStr, n) => keyStr);
 }
 
 function fillSubGroupsSelector() {
     function getSubGroups() {
         const subgroupList = [];
-        var data = databaseJson.val()[fac][course][week][group];
-
+        const data = databaseJson.val()[fac][course][week][group];
         Object.keys(data).map(function (objectKey, index) {
-            //var value = object[objectKey];
             subgroupList[index] = objectKey;
         });
         return subgroupList;
     }
 
     const subGroups = getSubGroups();
-
-    const subGroupSelector = document.getElementById('subgroup_selector');
-    clearSelector(subGroupSelector);
-    subGroups.forEach(function (subGroupName, number) {
-        subGroupSelector.options[number] = new Option((number + 1) + ' подгруппа', number + 1);
-    });
-
-
-    const cookieSubGroup = parseInt(getCookie(COOKIE_SUBGROUP));
-    if (!isNaN(cookieSubGroup) && cookieSubGroup <= subGroups.length) {
-        subGroup = cookieSubGroup;
-        subGroupSelector.selectedIndex = cookieSubGroup - 1;
-    } else {
-        subGroup = 1;
-    }
+    subGroup = selectOption(subGroupSelector, subGroups, COOKIE_SUBGROUP,
+        (keyStr, n) => keyStr + ' подгруппа');
 }
 
 function initButtonsListeners() {
@@ -156,7 +165,6 @@ function initButtonsListeners() {
                 });
 
                 // смена цвета рамки
-                const borderElement = document.getElementById('color_border');
                 if (week === WEEK_GREEN) {
                     borderElement.classList.add('border_green');
                     borderElement.classList.remove('border_white');
@@ -173,13 +181,26 @@ function initButtonsListeners() {
     }
 }
 
-function initCourseListener() {
-    const courseSelector = document.getElementById('course_selector');
-    courseSelector.addEventListener("change", function () {
-        course = this.value;
+function initFacListener() {
+    facSelector.addEventListener("change", function () {
+        fac = this.value;
+        setCookie(COOKIE_FAC, fac);
+        deleteCookie(COOKIE_COURSE);
         deleteCookie(COOKIE_GROUP);
         deleteCookie(COOKIE_SUBGROUP);
+        fillCourseSelector();
+        fillGroupsSelector();
+        fillSubGroupsSelector();
+        onPropertyChange();
+    });
+}
+
+function initCourseListener() {
+    courseSelector.addEventListener("change", function () {
+        course = this.value;
         setCookie(COOKIE_COURSE, course);
+        deleteCookie(COOKIE_GROUP);
+        deleteCookie(COOKIE_SUBGROUP);
         fillGroupsSelector();
         fillSubGroupsSelector();
         onPropertyChange();
@@ -187,10 +208,9 @@ function initCourseListener() {
 }
 
 function initGroupListener() {
-    const groupSelector = document.getElementById('group_selector');
     groupSelector.addEventListener("change", function () {
         group = this.value;
-        setCookie(COOKIE_GROUP, this.selectedIndex);
+        setCookie(COOKIE_GROUP, group);
         deleteCookie(COOKIE_SUBGROUP);
         fillSubGroupsSelector();
         onPropertyChange();
@@ -198,7 +218,6 @@ function initGroupListener() {
 }
 
 function initSubGroupListener() {
-    const subGroupSelector = document.getElementById('subgroup_selector');
     subGroupSelector.addEventListener("change", function () {
         subGroup = this.value;
         setCookie(COOKIE_SUBGROUP, subGroup);
@@ -224,22 +243,20 @@ function tableCreate() {
         var lessonObj = scheduleJson[lessonKeyList[i]];
         var tr = document.createElement('tr');
         for (var j = 0; j < 3; j++) {
-            var cellText;
+            var td = document.createElement('td');
             switch (j) {
                 case 0:
-                    cellText = i + 1;
+                    td.innerHTML = i + 1;
                     break;
                 case 1:
-                    cellText = lessonObj['time'];
+                    td.innerHTML = getTimeText(lessonObj['time']);
                     break;
                 case 2:
-                    //cellText = lessonObj['cell_html'];
-                    cellText = lessonObj['lesson'];
+                    td.innerHTML = lessonObj['lesson'];
+                    td.setAttribute('title', getLessonHint(lessonObj));
                     break;
             }
-            var td = document.createElement('td');
             //td.appendChild(document.createTextNode(cellText));
-            td.innerHTML = cellText;
             tr.appendChild(td)
         }
         tbdy.appendChild(tr);
@@ -247,12 +264,59 @@ function tableCreate() {
     tbl.appendChild(tbdy);
     container.innerHTML = '';
     container.appendChild(tbl);
-}
 
+    function getTimeText(timeObj) {
+        const startTimeMs = timeObj['startTime'];
+        const endTimeMs = timeObj['endTime'];
+        const startTime = new Date(startTimeMs);
+        const endTime = new Date(endTimeMs);
+
+        const startTimeHours = Math.floor(startTime.getHours() / 10) < 1 ? '0' + startTime.getHours() :
+            startTime.getHours();
+        const startTimeMinutes = Math.floor(startTime.getMinutes() / 10) < 1 ? '0' + startTime.getMinutes() :
+            startTime.getMinutes();
+
+        const endTimeHours = Math.floor(endTime.getHours() / 10) < 1 ? '0' + endTime.getHours() :
+            endTime.getHours();
+        const endTimeMinutes = Math.floor(endTime.getMinutes() / 10) < 1 ? '0' + endTime.getMinutes() :
+            endTime.getMinutes();
+
+        const string = startTimeHours + ':' + startTimeMinutes + '\n' + endTimeHours + ':' + endTimeMinutes;
+        return string;
+    }
+
+    function getLessonHint(lessonObj) {
+        const lessons = lessonObj['cellLesson'];
+        if (lessons === undefined || lessons === '') {
+            return '';
+        }
+        let string = '';
+
+        for (let lessonIndex = 0; lessonIndex < lessons.length; lessonIndex++) {
+            if (lessonIndex !== 0) {
+                string = string + '==================== И ====================\n';
+            }
+            const lessonsForChoose = lessons[lessonIndex];
+            for (let lessonForChooseIndex = 0;
+                 lessonForChooseIndex < lessonsForChoose.length; lessonForChooseIndex++) {
+                if (lessonForChooseIndex !== 0) {
+                    string = string + '------------------- ИЛИ -------------------\n';
+                }
+                for (let key in lessonsForChoose[lessonForChooseIndex]) {
+                    string = string + key + ': ' + lessonsForChoose[lessonForChooseIndex][key] + '\n';
+                }
+            }
+        }
+
+        string = string.replace(/\n+$/g, '');
+        return string;
+    }
+}
 
 loadSchedule().then(function (json) {
     databaseJson = json;
 
+    fillFacSelector();
     fillCourseSelector();
     fillGroupsSelector();
     fillSubGroupsSelector();
@@ -260,7 +324,55 @@ loadSchedule().then(function (json) {
     onPropertyChange();
 });
 
+function chooseDay() {
+    day = new Date().getDay();
+    if (day < 1 || day > 6) {
+        day = 1;
+    }
+    const list = document.getElementsByClassName('day_button');
+    for (let i = 0; i < list.length; i++) {
+        const el = list[i];
+        if (el.getAttribute('day_index') === day + '') {
+            el.classList.toggle('active_button');
+            break;
+        }
+    }
+}
+
+function chooseWeek() {
+
+    function getWeekNumber() {
+        const c = new Date();
+        const onejan = new Date(c.getFullYear(), 0, 1);
+        return Math.ceil((((c - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    }
+
+    const weekNumber = getWeekNumber();
+    if (weekNumber % 2 === 1) {
+        week = WEEK_WHITE;
+        borderElement.classList.remove('border_green');
+        borderElement.classList.add('border_white');
+    } else {
+        week = WEEK_GREEN;
+        borderElement.classList.add('border_green');
+        borderElement.classList.remove('border_white');
+    }
+
+    const list = document.getElementsByClassName('color_button');
+    for (let i = 0; i < list.length; i++) {
+        const el = list[i];
+        if (el.getAttribute('week_color') === week) {
+            el.classList.toggle('active_button');
+            break;
+        }
+    }
+}
+
+chooseDay();
+chooseWeek();
+
 initButtonsListeners();
+initFacListener();
 initCourseListener();
 initGroupListener();
 initSubGroupListener();
