@@ -349,13 +349,13 @@ function chooseWeek() {
 
     const weekNumber = getWeekNumber();
     if (weekNumber % 2 === 1) {
-        week = WEEK_WHITE;
-        borderElement.classList.remove('border_green');
-        borderElement.classList.add('border_white');
-    } else {
         week = WEEK_GREEN;
         borderElement.classList.add('border_green');
         borderElement.classList.remove('border_white');
+    } else {
+        week = WEEK_WHITE;
+        borderElement.classList.remove('border_green');
+        borderElement.classList.add('border_white');
     }
 
     const list = document.getElementsByClassName('color_button');
