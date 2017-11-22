@@ -110,7 +110,7 @@ function fillCourseSelector() {
 function fillGroupsSelector() {
     function getGroups() {
         const groupList = [];
-        const data = databaseJson.val()[fac][course][week];
+        const data = databaseJson.val()[fac][course];
         Object.keys(data).map(function (objectKey, index) {
             groupList[index] = objectKey;
         });
@@ -124,7 +124,7 @@ function fillGroupsSelector() {
 function fillSubGroupsSelector() {
     function getSubGroups() {
         const subgroupList = [];
-        const data = databaseJson.val()[fac][course][week][group];
+        const data = databaseJson.val()[fac][course][group];
         Object.keys(data).map(function (objectKey, index) {
             subgroupList[index] = objectKey;
         });
@@ -231,7 +231,7 @@ function onPropertyChange() {
 }
 
 function tableCreate() {
-    const scheduleJson = databaseJson.val()[fac][course][week][group][subGroup][day];
+    const scheduleJson = databaseJson.val()[fac][course][group][subGroup][week][day];
 
     const lessonKeyList = Object.keys(scheduleJson);
 
