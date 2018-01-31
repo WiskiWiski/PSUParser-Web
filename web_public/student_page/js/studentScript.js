@@ -6,6 +6,9 @@ const COOKIE_COURSE = 'course';
 const COOKIE_GROUP = 'group';
 const COOKIE_SUBGROUP = 'subgroup';
 
+const KEY_DATA = 'data';
+const KEY_INFO = 'info';
+
 let week = WEEK_WHITE;
 let fac = 'fit';
 let course;
@@ -110,7 +113,7 @@ function fillCourseSelector() {
 function fillGroupsSelector() {
     function getGroups() {
         const groupList = [];
-        const data = databaseJson.val()[fac][course];
+        const data = databaseJson.val()[fac][course][KEY_DATA];
         Object.keys(data).map(function (objectKey, index) {
             groupList[index] = objectKey;
         });
@@ -124,7 +127,7 @@ function fillGroupsSelector() {
 function fillSubGroupsSelector() {
     function getSubGroups() {
         const subgroupList = [];
-        const data = databaseJson.val()[fac][course][group];
+        const data = databaseJson.val()[fac][course][KEY_DATA][group];
         Object.keys(data).map(function (objectKey, index) {
             subgroupList[index] = objectKey;
         });
@@ -231,7 +234,7 @@ function onPropertyChange() {
 }
 
 function tableCreate() {
-    const scheduleJson = databaseJson.val()[fac][course][group][subGroup][week][day];
+    const scheduleJson = databaseJson.val()[fac][course][KEY_DATA][group][subGroup][week][day];
 
     const lessonKeyList = Object.keys(scheduleJson);
 

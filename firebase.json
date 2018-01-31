@@ -1,23 +1,21 @@
 {
   "hosting": {
-    "public":"web_public/",
+    "public": "web_public/",
     "ignore": [
-		"firebase.json",
+      "firebase.json",
       "**/.git/**",
       "**/.idea/**",
       "**/node_modules/**"
     ],
     "rewrites": [
-		
-		{
+      {
         "source": "/upload",
-        "destination": "/admin_page/index.html"
+        "destination": "/admin_page/login.html"
       },
-		{
+      {
         "source": "**",
         "destination": "/student_page/index.html"
       }
-		
     ]
   }
 }

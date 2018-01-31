@@ -7,6 +7,7 @@ const resultContainer = document.getElementById("result_container");
 const msgList = document.getElementById("msg_list");
 const msgContainer = document.getElementById("msg_container");
 const uploadButton = document.getElementById('upload_btn');
+const saveButton = document.getElementById('save_btn');
 
 const facSelectorElement = document.getElementById("fac_selector");
 const courseSelectorElement = document.getElementById("course_selector");
@@ -184,53 +185,53 @@ function enablePrefs() {
     uploadButton.removeAttribute('disabled');
 }
 
+
+let jsonRes;
+
 function processResult(res) {
     resultContainer.setAttribute("style", "display: block");
 
     var completeText = 'Успешно загружено!';
 
-    const jsonRes = JSON.parse(res);
-    if (jsonRes.length <= 0) {
-        /*
-        const resultContent = document.getElementById('result_content');
-        resultContent.setAttribute("align", "center");
-        resultContent.innerHTML = "ok!";
-        */
-    } else {
-        clearSelector(msgList);
-        completeText = 'Успешно загружено: найдено ' + jsonRes.length + ' предупреждений!';
+    jsonRes = JSON.parse(res);
+    //console.log(res);
 
-        jsonRes.forEach(function (log, k) {
-            msgList.options[k] = new Option('[' + log.code + '] ' + log.displayText, k);
-            msgList.options[k].classList.add(getLogClassStyle(log));
+    clearSelector(msgList);
 
-            if (Math.floor(log.code / 1000) === 3) {
-                completeText = 'Загрузка прервана: обнаружены критические ошибки!';
-            }
-        });
+    jsonRes.logs.forEach(function (log, k) {
+        msgList.options[k] = new Option('[' + log.code + '] ' + log.displayText, k);
+        msgList.options[k].classList.add(getLogClassStyle(log));
 
-        msgList.addEventListener('change', function (ev) {
-            const json = jsonRes[ev.target.value];
-            onChange(json);
-        });
-
-        msgList.value = 0;
-        onChange(jsonRes[0]);
-        msgList.focus();
-
-        function onChange(log) {
-            var text = '[' + log.code + '] ';
-
-            for (var key in log.when) {
-                if (log.when.hasOwnProperty(key)) {
-                    text = text + key + ': ' + log.when[key] + ' ';
-                }
-            }
-
-            msgContainer.innerHTML = text + ' - \"<i>' + log.payload + '</i>\"</br><strong>' + log.displayText + '</strong>';
-            msgContainer.setAttribute('class', getLogClassStyle(log));
+        if (Math.floor(log.code / 1000) === 3) {
+            completeText = 'Загрузка прервана: обнаружены критические ошибки!';
         }
+    });
+
+    msgList.addEventListener('change', function (ev) {
+        const json = jsonRes.logs[ev.target.value];
+        onChange(json);
+    });
+
+    if (jsonRes.logs !== undefined && jsonRes.logs.length > 0) {
+        completeText = 'Успешно загружено: найдено ' + jsonRes.length + ' предупреждений!';
+        msgList.value = 0;
+        onChange(jsonRes.logs[0]);
+        msgList.focus();
     }
+
+    function onChange(log) {
+        var text = '[' + log.code + '] ';
+
+        for (var key in log.when) {
+            if (log.when.hasOwnProperty(key)) {
+                text = text + key + ': ' + log.when[key] + ' ';
+            }
+        }
+
+        msgContainer.innerHTML = text + ' - \"<i>' + log.payload + '</i>\"</br><strong>' + log.displayText + '</strong>';
+        msgContainer.setAttribute('class', getLogClassStyle(log));
+    }
+
 
     document.getElementById('complete_text').innerHTML = completeText;
 
@@ -246,6 +247,47 @@ function processResult(res) {
                 return 'option';
         }
     }
+}
+
+function saveToDatabase() {
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (!user) {
+            window.location.replace("./login.html");
+            return;
+        }
+    });
+
+    const xhr = new XMLHttpRequest();
+    saveButton.setAttribute('disabled', 'true');
+    xhr.onload = xhr.onerror = function () {
+        saveButton.removeAttribute('disabled');
+        if (xhr.status === 200) {
+            alert(xhr.responseText);
+            //processResult(xhr.responseText);
+        } else {
+            console.log("error " + this.status);
+        }
+    };
+
+    // если запуск с localhost, то запрос кидаем на локальный сервер, иначе - на firebase
+
+    const hosting = document.location;
+    if (hosting.host.includes("localhost") || hosting.origin.includes("file")) {
+        // localhost
+        xhr.open("POST", "http://localhost:3000/psu_saver", true);
+    } else {
+        // firebase hosting
+        xhr.open('POST', 'https://us-central1-psu-by.cloudfunctions.net/psu_saver', true);
+    }
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(JSON.stringify({
+        data: jsonRes.data,
+        fac: fac,
+        user: 'SomeUser', // TODO: Setup user name
+        course: course
+    }));
 }
 
 function post(result) {
@@ -274,9 +316,9 @@ function post(result) {
     xhr.setRequestHeader('Content-Type', 'application/json');
 
 
-    var fac = facSelectorElement.options[facSelectorElement.selectedIndex].value;
-    var course = courseSelectorElement.options[courseSelectorElement.selectedIndex].value;
-    var sgpg = parseInt(subgroupsSelectorElement.value.trim());
+    fac = facSelectorElement.options[facSelectorElement.selectedIndex].value;
+    course = courseSelectorElement.options[courseSelectorElement.selectedIndex].value;
+    sgpg = parseInt(subgroupsSelectorElement.value.trim());
     if (sgpg <= 0) {
         sgpg = 2;
     }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Page</title>
+    <title>PSU-Admin Page</title>
 
     <!-- for firebase hosting -->
     <script type="text/javascript">
@@ -84,8 +84,27 @@
             </tr>
         </table>
 
+        <input class="button" id="save_btn" type="submit" value="Сохранить" onclick="saveToDatabase();"/>
+
     </div>
 </div>
+
+
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script src="../fb_config.js"></script>
+<script>
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            console.log(user.email);
+        } else {
+            window.location.replace("./login.html");
+        }
+    });
+
+    function signOut() {
+        firebase.auth().signOut();
+    }
+</script>
 
 <script type="text/javascript" src="./js/uploader.js"></script>
 
