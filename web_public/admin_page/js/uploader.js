@@ -190,48 +190,140 @@ let jsonRes;
 
 function processResult(res) {
     resultContainer.setAttribute("style", "display: block");
+    const saveButton = document.getElementById('save_btn');
 
-    var completeText = 'Успешно загружено!';
+    let completeText;
 
     jsonRes = JSON.parse(res);
     //console.log(res);
 
-    clearSelector(msgList);
+    clearSelector(msgList); // очистка стиля блока отображения ошибки
+    msgContainer.removeAttribute('class'); // очистка списка ошибок
 
-    jsonRes.logs.forEach(function (log, k) {
-        msgList.options[k] = new Option('[' + log.code + '] ' + log.displayText, k);
-        msgList.options[k].classList.add(getLogClassStyle(log));
+    if (jsonRes.logs !== undefined && jsonRes.logs.length > 0) {
+        let criticalException = false;
+        jsonRes.logs.forEach(function (log, k) {
+            msgList.options[k] = new Option('[' + log.code + '] ' + log.displayText, k);
+            msgList.options[k].classList.add(getLogClassStyle(log));
 
-        if (Math.floor(log.code / 1000) === 3) {
-            completeText = 'Загрузка прервана: обнаружены критические ошибки!';
+            if (Math.floor(log.code / 1000) === 3) { // если ошибка 3ххх
+                criticalException = true;
+            }
+        });
+        if (criticalException){
+            completeText = 'Сканирование прервано: обнаружены критические ошибки!';
+        } else {
+            completeText = 'Сканирование успешно (найдено предупреждений: ' + jsonRes.logs.length + ')';
+            saveButton.removeAttribute('disabled');
         }
-    });
+
+        // отображение подробностей о первой ошибке
+        msgList.value = 0;
+        onChange(jsonRes.logs[0]);
+        msgList.focus();
+    } else {
+        completeText  = 'Успешно загружено!';
+        saveButton.removeAttribute('disabled');
+    }
 
     msgList.addEventListener('change', function (ev) {
+        // слушатель перехода по списку ошибок
         const json = jsonRes.logs[ev.target.value];
         onChange(json);
     });
 
-    if (jsonRes.logs !== undefined && jsonRes.logs.length > 0) {
-        completeText = 'Успешно загружено: найдено ' + jsonRes.length + ' предупреждений!';
-        msgList.value = 0;
-        onChange(jsonRes.logs[0]);
-        msgList.focus();
-    }
-
+    // обработчик отображения развернутой ошибки при переходе по списку
     function onChange(log) {
-        var text = '[' + log.code + '] ';
+        let text = `[${log.code}] <strong>${log.displayText}</strong>: <i>${log.payload}</i></br>`;
 
-        for (var key in log.when) {
-            if (log.when.hasOwnProperty(key)) {
-                text = text + key + ': ' + log.when[key] + ' ';
+        function getProperty(key) {
+            if (log.where.hasOwnProperty(key)) {
+                return log.when[key];
+            } else {
+                return ''
             }
         }
 
-        msgContainer.innerHTML = text + ' - \"<i>' + log.payload + '</i>\"</br><strong>' + log.displayText + '</strong>';
+        let prop;
+        prop = getProperty('weekDayIndex');
+        if (prop !== '') {
+            let dayOfWeek = prop;
+            switch (prop) {
+                case 0:
+                    dayOfWeek = 'понедельник';
+                    break;
+                case 1:
+                    dayOfWeek = 'вторник';
+                    break;
+                case 2:
+                    dayOfWeek = 'среда';
+                    break;
+                case 3:
+                    dayOfWeek = 'четверг';
+                    break;
+                case 4:
+                    dayOfWeek = 'пятница';
+                    break;
+                case 5:
+                    dayOfWeek = 'суббота';
+                    break;
+            }
+            text = `${text}День недели: ${dayOfWeek.toUpperCase()}</br>`;
+        }
+        prop = getProperty('subRow');
+        if (prop !== '') {
+            let weekColor = prop;
+            switch (prop) {
+                case 'a': // eng
+                case 'а': // rus
+                    weekColor = 'белая';
+                    break;
+                case 'b':
+                    weekColor = 'зелёная';
+            }
+            text = `${text}Неделя: ${weekColor.toUpperCase()}</br>`;
+        }
+        prop = getProperty('dayLessonIndex');
+        if (prop !== '') {
+            text = `${text}Номер пары: ${prop + 1}</br>`;
+        }
+        prop = getProperty('rowTime');
+        if (prop !== '') {
+            const REG_EXP_TIME_CELL = /[0-9]{1,2}\s*:\s*[0-9]{2}/gi;
+            function getByRegExp(source, exp) {
+                const res = source.match(exp);
+                if (res === null) {
+                    return [];
+                } else {
+                    return res;
+                }
+            }
+
+            const timeList = getByRegExp(prop, REG_EXP_TIME_CELL);
+            if (timeList.length === 2) {
+                const startTimeStr = timeList[0].replace(/\s*/g, '');
+                const endTimeStr = timeList[1].replace(/\s*/g, '');
+                prop = startTimeStr + " - " + endTimeStr;
+            }
+
+            text = `${text}Время: ${prop}</br>`;
+        }
+
+
+        let title;
+        prop = getProperty('tableRowIndex');
+        if (prop !== '') {
+            title = 'Строка: ' + prop + 1 + '\n';
+        }
+        prop = getProperty('tableCellIndex');
+        if (prop !== '') {
+            title += 'Столбец: ' + prop + 1;
+        }
+
+        msgContainer.setAttribute('title', title);
+        msgContainer.innerHTML = text;
         msgContainer.setAttribute('class', getLogClassStyle(log));
     }
-
 
     document.getElementById('complete_text').innerHTML = completeText;
 
