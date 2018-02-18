@@ -222,7 +222,7 @@ function processResult(res) {
         onChange(jsonRes.logs[0]);
         msgList.focus();
     } else {
-        completeText  = 'Успешно загружено!';
+        completeText  = 'Расписание успешно отсканировано';
         saveButton.removeAttribute('disabled');
     }
 
@@ -236,16 +236,16 @@ function processResult(res) {
     function onChange(log) {
         let text = `[${log.code}] <strong>${log.displayText}</strong>: <i>${log.payload}</i></br>`;
 
-        function getProperty(key) {
+        function getWhereProperty(key) {
             if (log.where.hasOwnProperty(key)) {
-                return log.when[key];
+                return log.where[key];
             } else {
                 return ''
             }
         }
 
         let prop;
-        prop = getProperty('weekDayIndex');
+        prop = getWhereProperty('weekDayIndex');
         if (prop !== '') {
             let dayOfWeek = prop;
             switch (prop) {
@@ -270,7 +270,7 @@ function processResult(res) {
             }
             text = `${text}День недели: ${dayOfWeek.toUpperCase()}</br>`;
         }
-        prop = getProperty('subRow');
+        prop = getWhereProperty('subRow');
         if (prop !== '') {
             let weekColor = prop;
             switch (prop) {
@@ -283,11 +283,11 @@ function processResult(res) {
             }
             text = `${text}Неделя: ${weekColor.toUpperCase()}</br>`;
         }
-        prop = getProperty('dayLessonIndex');
+        prop = getWhereProperty('dayLessonIndex');
         if (prop !== '') {
             text = `${text}Номер пары: ${prop + 1}</br>`;
         }
-        prop = getProperty('rowTime');
+        prop = getWhereProperty('rowTime');
         if (prop !== '') {
             const REG_EXP_TIME_CELL = /[0-9]{1,2}\s*:\s*[0-9]{2}/gi;
             function getByRegExp(source, exp) {
@@ -311,11 +311,11 @@ function processResult(res) {
 
 
         let title;
-        prop = getProperty('tableRowIndex');
+        prop = getWhereProperty('tableRowIndex');
         if (prop !== '') {
             title = 'Строка: ' + prop + 1 + '\n';
         }
-        prop = getProperty('tableCellIndex');
+        prop = getWhereProperty('tableCellIndex');
         if (prop !== '') {
             title += 'Столбец: ' + prop + 1;
         }
@@ -354,9 +354,9 @@ function saveToDatabase() {
     xhr.onload = xhr.onerror = function () {
         saveButton.removeAttribute('disabled');
         if (xhr.status === 200) {
-            alert(xhr.responseText);
-            //processResult(xhr.responseText);
+            alert("Расписание успешно опубликовано: " + xhr.responseText);
         } else {
+            alert("Не удалось опубликовать расписание: " + xhr.responseText);
             console.log("error " + this.status);
         }
     };
