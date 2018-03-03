@@ -191,6 +191,7 @@ let jsonRes;
 function processResult(res) {
     resultContainer.setAttribute("style", "display: block");
     const saveButton = document.getElementById('save_btn');
+    saveButton.setAttribute('disabled', 'true');
 
     let completeText;
 
